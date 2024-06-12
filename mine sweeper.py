@@ -73,8 +73,9 @@ def flag_cell(r, c):
 # 创建显示板
 display_board = show_board()
 
-# 使用 form 确保提交的一致性
+# 使用表单处理所有按钮点击
 with st.form("game_form"):
+    submitted = False
     for r in range(ROWS):
         cols = st.columns(COLS)
         for c in range(COLS):
@@ -84,9 +85,13 @@ with st.form("game_form"):
             with cols[c]:
                 if st.form_submit_button(cell_label, key=f"{r}-{c}-reveal"):
                     click_cell(r, c)
+                    submitted = True
                 if st.form_submit_button('🚩', key=f"{r}-{c}-flag"):
                     flag_cell(r, c)
-    st.form_submit_button("刷新")
+                    submitted = True
+
+    if st.form_submit_button("Submit"):
+        st.experimental_rerun()
 
 # 检查胜利条件
 if np.all((board == -1) == flags):
