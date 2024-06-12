@@ -70,16 +70,20 @@ def flag_cell(r, c):
         return
     flags[r, c] = not flags[r, c]
 
+# 创建显示板
 display_board = show_board()
 for r in range(ROWS):
     cols = st.columns(COLS)
     for c in range(COLS):
+        cell_label = display_board[r, c]
+        if cell_label == '':
+            cell_label = " "
         with cols[c]:
-            if st.button(display_board[r, c], key=f"{r}-{c}"):
+            if st.button(cell_label, key=f"{r}-{c}-reveal"):
                 click_cell(r, c)
-            if st.session_state[f"{r}-{c}"] == 2:
+            if st.button('🚩', key=f"{r}-{c}-flag"):
                 flag_cell(r, c)
 
+# 检查胜利条件
 if np.all((board == -1) == flags):
     st.success("Congratulations! You've flagged all the mines.")
-
