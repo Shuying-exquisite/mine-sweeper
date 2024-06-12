@@ -72,17 +72,21 @@ def flag_cell(r, c):
 
 # 创建显示板
 display_board = show_board()
-for r in range(ROWS):
-    cols = st.columns(COLS)
-    for c in range(COLS):
-        cell_label = display_board[r, c]
-        if cell_label == '':
-            cell_label = " "
-        with cols[c]:
-            if st.button(cell_label, key=f"{r}-{c}-reveal"):
-                click_cell(r, c)
-            if st.button('🚩', key=f"{r}-{c}-flag"):
-                flag_cell(r, c)
+
+# 使用 form 确保提交的一致性
+with st.form("game_form"):
+    for r in range(ROWS):
+        cols = st.columns(COLS)
+        for c in range(COLS):
+            cell_label = display_board[r, c]
+            if cell_label == '':
+                cell_label = " "
+            with cols[c]:
+                if st.form_submit_button(cell_label, key=f"{r}-{c}-reveal"):
+                    click_cell(r, c)
+                if st.form_submit_button('🚩', key=f"{r}-{c}-flag"):
+                    flag_cell(r, c)
+    st.form_submit_button("刷新")
 
 # 检查胜利条件
 if np.all((board == -1) == flags):
